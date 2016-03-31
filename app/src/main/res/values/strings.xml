@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">PullRecycler</string>
+    <string name="welcome_tips">https://github.com/Stay/PullRecycler</string>
+    <string name="title_framework_main">PullRecycler</string>
+    <string name="title_recycler_activity">我在Activity</string>
+    <string name="title_recycler_fragment">我在Fragment</string>
+    <string name="title_recycler_section_activity">SectionRecyclerActivity</string>
+    <string name="title_recycler_section_fragment">SectionRecyclerFragment</string>
+</resources>
