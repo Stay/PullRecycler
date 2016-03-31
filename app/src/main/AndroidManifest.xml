@@ -24,13 +24,13 @@
             android:name=".sample.SampleListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".sample.SampleListActivity1"
+            android:name=".sample.SampleListFragmentActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".sample.SampleSectionListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".sample.SampleSectionListActivity1"
+            android:name=".sample.SampleSectionListFragmentActivity"
             android:screenOrientation="portrait" />
     </application>
 

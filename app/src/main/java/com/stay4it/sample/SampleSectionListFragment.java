@@ -2,28 +2,32 @@ package com.stay4it.sample;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.stay4it.R;
-import com.stay4it.core.BaseFragment;
 import com.stay4it.core.BaseSectionListFragment;
-import com.stay4it.core.ITabFragment;
 import com.stay4it.widgets.pull.BaseViewHolder;
 import com.stay4it.widgets.pull.PullRecycler;
 import com.stay4it.widgets.pull.layoutmanager.ILayoutManager;
 import com.stay4it.widgets.pull.layoutmanager.MyGridLayoutManager;
+import com.stay4it.widgets.pull.layoutmanager.MyLinearLayoutManager;
+import com.stay4it.widgets.pull.layoutmanager.MyStaggeredGridLayoutManager;
 import com.stay4it.widgets.pull.section.SectionData;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Stay on 8/3/16.
  * Powered by www.stay4it.com
  */
-public class SampleSectionListFragment extends BaseSectionListFragment<String> implements ITabFragment {
+public class SampleSectionListFragment extends BaseSectionListFragment<String> {
+
+    private int random;
 
     @Override
     protected BaseViewHolder onCreateSectionViewHolder(ViewGroup parent, int viewType) {
@@ -33,12 +37,25 @@ public class SampleSectionListFragment extends BaseSectionListFragment<String> i
 
     @Override
     protected ILayoutManager getLayoutManager() {
-        return new MyGridLayoutManager(getContext(), 3);
+        random = new Random().nextInt(3);
+        switch (random) {
+            case 0:
+                return new MyLinearLayoutManager(getContext());
+            case 1:
+                return new MyGridLayoutManager(getContext(), 3);
+            case 2:
+                return new MyStaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        }
+        return super.getLayoutManager();
     }
 
     @Override
     protected RecyclerView.ItemDecoration getItemDecoration() {
-        return null;
+        if (random == 0) {
+            return super.getItemDecoration();
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -73,16 +90,6 @@ public class SampleSectionListFragment extends BaseSectionListFragment<String> i
                 }
             }
         }, 3000);
-    }
-
-    @Override
-    public void onMenuItemClick() {
-
-    }
-
-    @Override
-    public BaseFragment getFragment() {
-        return this;
     }
 
     class SampleViewHolder extends BaseViewHolder {

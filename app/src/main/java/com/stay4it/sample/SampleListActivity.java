@@ -1,5 +1,7 @@
 package com.stay4it.sample;
 
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +11,21 @@ import com.stay4it.R;
 import com.stay4it.core.BaseListActivity;
 import com.stay4it.widgets.pull.BaseViewHolder;
 import com.stay4it.widgets.pull.PullRecycler;
+import com.stay4it.widgets.pull.layoutmanager.ILayoutManager;
+import com.stay4it.widgets.pull.layoutmanager.MyGridLayoutManager;
+import com.stay4it.widgets.pull.layoutmanager.MyLinearLayoutManager;
+import com.stay4it.widgets.pull.layoutmanager.MyStaggeredGridLayoutManager;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Stay on 25/2/16.
  * Powered by www.stay4it.com
  */
 public class SampleListActivity extends BaseListActivity<String> {
+
+    private int random;
 
     @Override
     protected void setUpTitle(int titleResId) {
@@ -35,16 +44,29 @@ public class SampleListActivity extends BaseListActivity<String> {
         return new SampleViewHolder(view);
     }
 
-//    @Override
-//    protected ILayoutManager getLayoutManager() {
-//        MyGridLayoutManager layoutManager = new MyGridLayoutManager(getApplicationContext(), 3);
-//        return layoutManager;
-//    }
 
-    //    @Override
-//    protected ILayoutManager getLayoutManager() {
-//        return new MyStaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-//    }
+    @Override
+    protected ILayoutManager getLayoutManager() {
+        random = new Random().nextInt(3);
+        switch (random){
+            case 0:
+                return new MyLinearLayoutManager(getApplicationContext());
+            case 1:
+                return new MyGridLayoutManager(getApplicationContext(), 3);
+            case 2:
+                return new MyStaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        }
+        return super.getLayoutManager();
+    }
+
+    @Override
+    protected RecyclerView.ItemDecoration getItemDecoration() {
+        if (random == 0){
+            return super.getItemDecoration();
+        }else {
+            return null;
+        }
+    }
 
     @Override
     public void onRefresh(final int action) {

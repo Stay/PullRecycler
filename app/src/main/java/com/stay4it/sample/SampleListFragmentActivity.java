@@ -10,7 +10,7 @@ import com.stay4it.core.BaseActivity;
  * Created by Stay on 2/2/16.
  * Powered by www.stay4it.com
  */
-public class SampleListActivity1 extends BaseActivity {
+public class SampleListFragmentActivity extends BaseActivity {
 
     private SampleListFragment mSampleListFragment;
 

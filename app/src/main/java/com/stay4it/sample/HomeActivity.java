@@ -48,9 +48,9 @@ public class HomeActivity extends BaseListActivity<Module> {
     public void onRefresh(int action) {
         mDataList = new ArrayList<>();
         mDataList.add(new Module("RecyclerView基于BaseListActivity\n支持下拉刷新,加载更多", SampleListActivity.class));
-        mDataList.add(new Module("RecyclerView基于BaseListFragment\n支持下拉刷新,加载更多", SampleListActivity1.class));
+        mDataList.add(new Module("RecyclerView基于BaseListFragment\n支持下拉刷新,加载更多", SampleListFragmentActivity.class));
         mDataList.add(new Module("RecyclerView基于BaseSectionListActivity\n支持分组,下拉刷新,加载更多", SampleSectionListActivity.class));
-        mDataList.add(new Module("RecyclerView基于BaseSectionListFragment\n支持分组,下拉刷新,加载更多", SampleSectionListActivity1.class));
+        mDataList.add(new Module("RecyclerView基于BaseSectionListFragment\n支持分组,下拉刷新,加载更多", SampleSectionListFragmentActivity.class));
         recycler.onRefreshCompleted();
     }
 
