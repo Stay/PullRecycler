@@ -82,3 +82,5 @@ Stay这里做的BaseListActivity要更内聚一些。因为我们将List<T>定�
 啊啊啊，开车好累。老司机得歇会。
 
 直接可以运行，另外还封装了BaseSectionListActivity, 带section header的sample。
+
+本次封装收录在[快速搭建项目(Material Design重构版)](http://www.stay4it.com/course/7)课程中，如果想知道它是如何一步步封装出来的，不妨跟着课程系统学习一下。
