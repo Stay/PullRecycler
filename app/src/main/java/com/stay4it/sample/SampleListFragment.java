@@ -6,10 +6,13 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.stay4it.R;
 import com.stay4it.core.BaseListFragment;
+import com.stay4it.model.ConstantValues;
 import com.stay4it.widgets.pull.BaseViewHolder;
 import com.stay4it.widgets.pull.PullRecycler;
 import com.stay4it.widgets.pull.layoutmanager.ILayoutManager;
@@ -76,7 +79,7 @@ public class SampleListFragment extends BaseListFragment<String>  {
                 }
                 int size = mDataList.size();
                 for (int i = size; i < size + 20; i++) {
-                    mDataList.add("sample list item " + i);
+                    mDataList.add(ConstantValues.images[i]);
                 }
                 adapter.notifyDataSetChanged();
                 recycler.onRefreshCompleted();
@@ -91,16 +94,24 @@ public class SampleListFragment extends BaseListFragment<String>  {
 
     class SampleViewHolder extends BaseViewHolder {
 
+        ImageView mSampleListItemImg;
         TextView mSampleListItemLabel;
 
         public SampleViewHolder(View itemView) {
             super(itemView);
             mSampleListItemLabel = (TextView) itemView.findViewById(R.id.mSampleListItemLabel);
+            mSampleListItemImg = (ImageView) itemView.findViewById(R.id.mSampleListItemImg);
         }
 
         @Override
         public void onBindViewHolder(int position) {
-            mSampleListItemLabel.setText(mDataList.get(position));
+            mSampleListItemLabel.setVisibility(View.GONE);
+            Glide.with(mSampleListItemImg.getContext())
+                    .load(mDataList.get(position))
+                    .centerCrop()
+                    .placeholder(R.color.app_primary_color)
+                    .crossFade()
+                    .into(mSampleListItemImg);
         }
 
         @Override

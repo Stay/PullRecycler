@@ -77,7 +77,7 @@ public class HomeActivity extends BaseListActivity<Module> {
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_about:
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Stay/PullRecycler"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.stay4it.com/course/7"));
                 startActivity(intent);
                 break;
         }
