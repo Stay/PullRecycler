@@ -12,7 +12,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.stay4it.R;
 import com.stay4it.core.BaseListFragment;
-import com.stay4it.model.ConstantValues;
+import com.stay4it.model.BaseModel;
+import com.stay4it.model.Benefit;
+import com.stay4it.request.Api;
 import com.stay4it.widgets.pull.BaseViewHolder;
 import com.stay4it.widgets.pull.PullRecycler;
 import com.stay4it.widgets.pull.layoutmanager.ILayoutManager;
@@ -23,12 +25,20 @@ import com.stay4it.widgets.pull.layoutmanager.MyStaggeredGridLayoutManager;
 import java.util.ArrayList;
 import java.util.Random;
 
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+
 /**
  * Created by Stay on 8/3/16.
  * Powered by www.stay4it.com
  */
-public class SampleListFragment extends BaseListFragment<String>  {
+public class SampleListFragment extends BaseListFragment<Benefit> {
     private int random;
+    private int page = 1;
 
     @Override
     protected BaseViewHolder getViewHolder(ViewGroup parent, int viewType) {
@@ -45,7 +55,7 @@ public class SampleListFragment extends BaseListFragment<String>  {
     @Override
     protected ILayoutManager getLayoutManager() {
         random = new Random().nextInt(3);
-        switch (random){
+        switch (random) {
             case 0:
                 return new MyLinearLayoutManager(getContext());
             case 1:
@@ -58,9 +68,9 @@ public class SampleListFragment extends BaseListFragment<String>  {
 
     @Override
     protected RecyclerView.ItemDecoration getItemDecoration() {
-        if (random == 0){
+        if (random == 0) {
             return super.getItemDecoration();
-        }else {
+        } else {
             return null;
         }
     }
@@ -71,25 +81,42 @@ public class SampleListFragment extends BaseListFragment<String>  {
             mDataList = new ArrayList<>();
         }
 
-        recycler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (action == PullRecycler.ACTION_PULL_TO_REFRESH) {
-                    mDataList.clear();
-                }
-                int size = mDataList.size();
-                for (int i = size; i < size + 20; i++) {
-                    mDataList.add(ConstantValues.images[i]);
-                }
-                adapter.notifyDataSetChanged();
-                recycler.onRefreshCompleted();
-                if (mDataList.size() < 100) {
-                    recycler.enableLoadMore(true);
-                } else {
-                    recycler.enableLoadMore(false);
-                }
-            }
-        }, 3000);
+        if (action == PullRecycler.ACTION_PULL_TO_REFRESH) {
+            page = 1;
+        }
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://gank.io/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+
+        Api api = retrofit.create(Api.class);
+        api.rxBenefits(20, page++)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<BaseModel<ArrayList<Benefit>>>() {
+                    @Override
+                    public void call(BaseModel<ArrayList<Benefit>> model) {
+                        if (action == PullRecycler.ACTION_PULL_TO_REFRESH) {
+                            mDataList.clear();
+                        }
+                        if (model.results == null || model.results.size() == 0) {
+                            recycler.enableLoadMore(false);
+                        } else {
+                            recycler.enableLoadMore(true);
+                            mDataList.addAll(model.results);
+                            adapter.notifyDataSetChanged();
+                        }
+                        recycler.onRefreshCompleted();
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        recycler.onRefreshCompleted();
+                    }
+                })
+        ;
+
     }
 
     class SampleViewHolder extends BaseViewHolder {
@@ -107,7 +134,7 @@ public class SampleListFragment extends BaseListFragment<String>  {
         public void onBindViewHolder(int position) {
             mSampleListItemLabel.setVisibility(View.GONE);
             Glide.with(mSampleListItemImg.getContext())
-                    .load(mDataList.get(position))
+                    .load(mDataList.get(position).url)
                     .centerCrop()
                     .placeholder(R.color.app_primary_color)
                     .crossFade()
